@@ -1,6 +1,6 @@
 # PubMed Tools
 
-This repository regroups some tools for PubMed corpus processing.
+This repository regroups some tools for MEDLINE/PubMed data processing.
 
 ## Text extraction
 
