@@ -8,13 +8,15 @@ from lxml import etree
 from .tools import remove_abs, ensure_dir, get_other_extension
 
 
-def extract_text(input_path, output_path, n_jobs=2):
+def extract_text(input_path: str = None,
+                 output_path: str = None,
+                 n_jobs: int = 1) -> None:
     """
     Extract titles and abstracts from PubMed documents
     :param input_path: path to the PubMed corpus
     :param output_path: path where extracted text will be stored
     :param n_jobs: number of processes to use
-    :return: nothing
+    :return: None
     """
 
     processing_list = list()
@@ -42,14 +44,15 @@ def extract_text(input_path, output_path, n_jobs=2):
                             for source_file, target_file in processing_list)
 
 
-def _process_one_file(source_file, target_file):
+def _process_one_file(source_file: str = None,
+                      target_file: str = None) -> None:
     """
     Process one compressed PubMed file
     The function is largely inspired by the script developed by Sampo Pyysalo and available at
     https://github.com/spyysalo/pubmed
     :param source_file: source PubMed file
     :param target_file: target txt file
-    :return: nothin
+    :return: None
     """
 
     # Parsing the xml file
@@ -109,7 +112,7 @@ def _process_one_file(source_file, target_file):
             for title in citation_title:
                 # Removing [ and ] characters
                 output_file.write("{}\n".format(
-                    re.sub("[\]\[]", "", title)))
+                    re.sub(r"[\]\[]", "", title)))
 
             for text in citation_text:
                 output_file.write("{}\n".format(text))

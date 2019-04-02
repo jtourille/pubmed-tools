@@ -11,7 +11,8 @@ Then, use this tool to extract titles and abstracts from the compressed files:
 
 ```bash
 python main.py EXTRACT \
-    --input_dir /path/to/downloaded/data \
-    --output_dir /path/to/output/dir \
-    -n <number-of-processes>
+    --input-dir /path/to/downloaded/data \
+    --output-dir /path/to/output/dir \
+    -n <number-of-processes> \
+    [--overwrite]
 ```
