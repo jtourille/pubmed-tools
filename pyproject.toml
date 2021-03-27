@@ -9,6 +9,7 @@ license = "MIT"
 python = "^3.9"
 joblib = "^1.0.1"
 lxml = "^4.6.3"
+click = "^7.1.2"
 
 [tool.poetry.dev-dependencies]
 black = "^20.8b1"
