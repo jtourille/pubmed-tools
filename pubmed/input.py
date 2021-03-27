@@ -8,9 +8,9 @@ from lxml import etree
 from .tools import remove_abs, ensure_dir, get_other_extension
 
 
-def extract_text(input_path: str = None,
-                 output_path: str = None,
-                 n_jobs: int = 1) -> None:
+def extract_text(
+    input_path: str = None, output_path: str = None, n_jobs: int = 1
+) -> None:
     """
     Extract titles and abstracts from PubMed documents
     :param input_path: path to the PubMed corpus
@@ -26,7 +26,9 @@ def extract_text(input_path: str = None,
             if re.match("^.*\.gz$", filename):
 
                 # For each compressed file, computing its sub-directory
-                subdir = remove_abs(re.sub(os.path.abspath(input_path), "", root))
+                subdir = remove_abs(
+                    re.sub(os.path.abspath(input_path), "", root)
+                )
 
                 # Computing the target dir and creating it
                 target_dir = os.path.join(os.path.abspath(output_path), subdir)
@@ -34,18 +36,23 @@ def extract_text(input_path: str = None,
 
                 # Computing source and target file paths
                 source_file = os.path.join(root, filename)
-                target_file = os.path.join(target_dir, get_other_extension(filename, "txt"))
+                target_file = os.path.join(
+                    target_dir, get_other_extension(filename, "txt")
+                )
 
                 # Appending to processing list
                 processing_list.append((source_file, target_file))
 
     # Starting text extraction
-    Parallel(n_jobs=n_jobs)(delayed(_process_one_file)(source_file, target_file)
-                            for source_file, target_file in processing_list)
+    Parallel(n_jobs=n_jobs)(
+        delayed(_process_one_file)(source_file, target_file)
+        for source_file, target_file in processing_list
+    )
 
 
-def _process_one_file(source_file: str = None,
-                      target_file: str = None) -> None:
+def _process_one_file(
+    source_file: str = None, target_file: str = None
+) -> None:
     """
     Process one compressed PubMed file
     The function is largely inspired by the script developed by Sampo Pyysalo and available at
@@ -56,7 +63,7 @@ def _process_one_file(source_file: str = None,
     """
 
     # Parsing the xml file
-    tree = etree.parse(gzip.open(source_file, 'rb'))
+    tree = etree.parse(gzip.open(source_file, "rb"))
 
     # Finding all MedlineCitation elements within the file
     citations = tree.findall(".//MedlineCitation")
@@ -103,7 +110,9 @@ def _process_one_file(source_file: str = None,
                     for section in abstract_texts:
                         section_text = list()
                         if "Label" in section.attrib:
-                            section_text.append("{}:".format(section.attrib["Label"]))
+                            section_text.append(
+                                "{}:".format(section.attrib["Label"])
+                            )
                         if section.text:
                             section_text.append(section.text)
                         citation_text.append(" ".join(section_text))
@@ -111,8 +120,7 @@ def _process_one_file(source_file: str = None,
             # Writing title and abstracts to file
             for title in citation_title:
                 # Removing [ and ] characters
-                output_file.write("{}\n".format(
-                    re.sub(r"[\]\[]", "", title)))
+                output_file.write("{}\n".format(re.sub(r"[\]\[]", "", title)))
 
             for text in citation_text:
                 output_file.write("{}\n".format(text))
